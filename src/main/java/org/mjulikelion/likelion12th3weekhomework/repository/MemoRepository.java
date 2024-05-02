@@ -2,13 +2,14 @@ package org.mjulikelion.likelion12th3weekhomework.repository;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.mjulikelion.likelion12th3weekhomework.memo.Memo;
+import org.mjulikelion.likelion12th3weekhomework.error.ErrorCode;
+import org.mjulikelion.likelion12th3weekhomework.error.exception.CantAccessExeption;
+import org.mjulikelion.likelion12th3weekhomework.error.exception.MemoNotFoundException;
+import org.mjulikelion.likelion12th3weekhomework.model.Memo;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Getter
 @AllArgsConstructor
@@ -16,79 +17,71 @@ import java.util.stream.Stream;
 public class MemoRepository {
 
     //Memo객체를 담는 memoList이름을 가진 리스트를 생성한다.
-    private final List<Memo> memoList = new ArrayList<>();
+    private final List<Memo> memoList = new LinkedList<>();
 
-    //모든 메모 조회
-    public List<Memo> getAllMemo(){
-        return memoList;   //메모리스트 전체 조회
-    }
 
     //메모 작성
-    public void addMemo(Memo memo){
+    public void addMemo(Memo memo) {
         this.memoList.add(memo);
     }
 
-
-
-
     //userId가 동일한 메모를 모두 조회
     public List<Memo> getMemoAllByUserId(String userId) {
-        List<Memo> resultMemo=
-                memoList.stream().filter(memo-> memo.getUserId().equals(userId))
-                        .collect(Collectors.toList());
-        if(resultMemo.isEmpty()){
-            new IllegalArgumentException("없어용...");
+        List<Memo> result = new LinkedList<>();
+        for (Memo m : this.memoList) {
+            if (m.getUserId().equals(userId)) {
+                result.add(m);
+            }
         }
-        return resultMemo;
+        return result;
     }
-
 
 
     // memoID를 통해 특정 메모만 조회
-    public List<Memo> getMemoByMemoId(String userId,int memoId){
-        List<Memo> resultMemo=
-                memoList.stream().filter(memo -> memo.getMemoId()==memoId)
-                    .collect(Collectors.toList());
-
-        for (Memo m : resultMemo) {
-            if (!(m.getUserId().equals(userId))) {
-                throw new IllegalArgumentException("접근 제한");
+    public Memo getMemoByMemoId(String userId, int memoId) {
+        for (Memo m : this.memoList) {
+            if (m.getMemoId() == memoId) {
+                if (m.getUserId().equals(userId)) {
+                    return m;
+                }
+                //접근할 수 없는 경우
+                throw new CantAccessExeption(ErrorCode.CANT_ACCESS);
             }
         }
-
-        return resultMemo;
+        //일치하는 메모 아이디가 없는 경우
+        throw new MemoNotFoundException(ErrorCode.MEMO_NOT_FOUND);
     }
 
 
-
     //memoID를 통해서 특정 메모를 삭제
-    public void deleteMemoByMemoId(String userId,int memoId){
-        for (Memo m : this.memoList) {    //리스트의 모든 객체에 대해서 반복, 객체를 m에 반환한다.
-            if (m.getMemoId() == memoId) { //m의 MemoId가 입력받은 id와 동일하다면 memoList에서 삭제한다.
-                this.memoList.remove(m);
-
-                if (!(m.getUserId().equals(userId))) {
-                    throw new IllegalArgumentException("접근 제한");
+    public void deleteMemoByMemoId(String userId, int memoId) {
+        for (Memo m : this.memoList) {
+            if (m.getMemoId() == memoId) {
+                if (m.getUserId().equals(userId)) {
+                    memoList.remove(m);
                 }
-                return;
+                //접근할 수 없는 경우
+                throw new CantAccessExeption(ErrorCode.CANT_ACCESS);
             }
         }
+        //일치하는 메모 아이디가 없는 경우
+        throw new MemoNotFoundException(ErrorCode.MEMO_NOT_FOUND);
     }
 
 
     //메모ID를 통해서 특정 메모 수정
-    public void updateMemoByMemoId(String userId,int memoId,Memo memo){
+    public void updateMemoByMemoId(Memo memo) {
         for (Memo m : this.memoList) {
-            if (m.getMemoId() == memoId) {
-                this.memoList.remove(m);
-                this.memoList.add(memo);
-
-                if (!(m.getUserId().equals(userId))) {
-                    throw new IllegalArgumentException("접근 제한");
+            if (m.getMemoId() == memo.getMemoId()) {
+                if (m.getUserId().equals(memo.getUserId())) {
+                    memoList.remove(m);
+                    memoList.add(memo);
                 }
-
-                return;
+                //접슨할수 없는 경우
+                throw new CantAccessExeption(ErrorCode.CANT_ACCESS);
             }
         }
+        //일치하는 메모 아이디가 없는 경우
+        throw new MemoNotFoundException(ErrorCode.MEMO_NOT_FOUND);
     }
 }
