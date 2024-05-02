@@ -1,6 +1,5 @@
 package org.mjulikelion.likelion12th3weekhomework.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,7 +17,7 @@ public class Memo {
     private final String title; //메모 제목
 
     //Json변환시 유저id는 반환되지 않는다
-    @JsonIgnore
+    //@JsonIgnore
     private final String userId;   //유저id
 
     //좋아요 리스트
