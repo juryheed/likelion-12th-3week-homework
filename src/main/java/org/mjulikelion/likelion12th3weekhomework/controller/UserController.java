@@ -10,12 +10,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("users")
 public class UserController {
     private final UserService userService;
 
+    //유저 추가
     @PostMapping
     public ResponseEntity<ResponseDto<Void>> addUser(@RequestBody UserCreateDto userCreateDto) {
         userService.userAdd(userCreateDto);
@@ -28,25 +31,37 @@ public class UserController {
 
     //유저 정보 수정
     @PatchMapping("/{id}")
-    public ResponseEntity<ResponseDto<Void>> userUpdate(@PathVariable String userId, @RequestBody UserUpdateDto userUpdateDto) {
+    public ResponseEntity<ResponseDto<Void>> userUpdate(@PathVariable UUID userId, @RequestBody UserUpdateDto userUpdateDto) {
         userService.userUpdate(userId, userUpdateDto);
 
         return new ResponseEntity<>(ResponseDto.res(
-                HttpStatus.CREATED,
+                HttpStatus.OK,
                 "Susccess"
-        ), HttpStatus.CREATED);
+        ), HttpStatus.OK);
     }
 
+    //유저 삭제
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseDto<Void>> userDelete(@PathVariable UserDeleteDto userDeleteDto) {
-        userService.userDelete(userDeleteDto);
+    public ResponseEntity<ResponseDto<Void>> userDelete(@RequestHeader UUID userId, @PathVariable UserDeleteDto userDeleteDto) {
+        userService.userDelete(userId, userDeleteDto);
+
+        return new ResponseEntity<>(ResponseDto.res(
+                HttpStatus.OK,
+                "Susccess"
+        ), HttpStatus.OK);
+    }
+
+
+    //로그인
+    @GetMapping("/login")
+    public ResponseEntity<ResponseDto<Void>> login(@RequestHeader UUID userId, @RequestHeader String email, @RequestHeader String password) {
+        userService.login(userId, email, password);
 
         return new ResponseEntity<>(ResponseDto.res(
                 HttpStatus.CREATED,
                 "Susccess"
         ), HttpStatus.CREATED);
-
-
     }
+
 
 }

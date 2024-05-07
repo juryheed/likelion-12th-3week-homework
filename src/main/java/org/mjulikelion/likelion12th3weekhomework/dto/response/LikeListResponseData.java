@@ -3,7 +3,7 @@ package org.mjulikelion.likelion12th3weekhomework.dto.response;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import org.mjulikelion.likelion12th3weekhomework.model.Like;
+import org.mjulikelion.likelion12th3weekhomework.model.MemoLike;
 
 import java.util.List;
 
@@ -11,5 +11,5 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public class LikeListResponseData {
-    private List<Like> like;
+    private List<MemoLike> like;
 }

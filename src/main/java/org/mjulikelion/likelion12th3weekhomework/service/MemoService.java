@@ -5,58 +5,82 @@ import org.mjulikelion.likelion12th3weekhomework.dto.MemoCreateDto;
 import org.mjulikelion.likelion12th3weekhomework.dto.MemoUpdateDto;
 import org.mjulikelion.likelion12th3weekhomework.dto.response.MemoListResponseData;
 import org.mjulikelion.likelion12th3weekhomework.dto.response.MemoResponseData;
+import org.mjulikelion.likelion12th3weekhomework.error.ErrorCode;
+import org.mjulikelion.likelion12th3weekhomework.error.exception.MemoNotFoundException;
+import org.mjulikelion.likelion12th3weekhomework.error.exception.UserNotFoundException;
 import org.mjulikelion.likelion12th3weekhomework.model.Memo;
+import org.mjulikelion.likelion12th3weekhomework.model.User;
 import org.mjulikelion.likelion12th3weekhomework.repository.MemoRepository;
+import org.mjulikelion.likelion12th3weekhomework.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
 public class MemoService {
 
     private final MemoRepository memoRepository;
+    private final UserRepository userRepository;
 
     //메모 추가
-    public void addMemo(MemoCreateDto memoCreateDto, String userId) {
-        int memoId = 1;
+    public void addMemo(MemoCreateDto memoCreateDto, UUID userId) {
+        UUID memoId = UUID.randomUUID();//랜덤 UUID생성
         Memo newMemo = Memo.builder()
-                .memoId(memoId)
                 .content(memoCreateDto.getContent())
                 .title(memoCreateDto.getTitle())
-                .userId(userId).build();
+                .build();
 
-        memoRepository.addMemo(newMemo);
+        memoRepository.save(newMemo);
     }
 
     //유저아이디로 메모 조회
-    public MemoListResponseData getMemoAllByUserId(String userId) {
-        List<Memo> memoList = memoRepository.getMemoAllByUserId(userId);
-        MemoListResponseData memoListResponseData = MemoListResponseData.builder().memoList(memoList).build();
+    public MemoListResponseData getMemoAllByUserId(UUID userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND));
+        List<Memo> memoList = memoRepository.findAllByUser(user);
+
+        MemoListResponseData memoListResponseData = MemoListResponseData.builder().
+                memoList(memoList)
+                .build();
+
         return memoListResponseData;
     }
 
     //메모 아이디로 메모 조회
-    public MemoResponseData getMemoByMemoId(String userId, int memoId) {
-        Memo memo = memoRepository.getMemoByMemoId(userId, memoId);
-        MemoResponseData memoResponseData = MemoResponseData.builder().memo(memo).build();
+    public MemoResponseData getMemoByMemoId(UUID userId, UUID memoId) {
+        Memo memo = memoRepository.findById(userId).orElseThrow(() -> new MemoNotFoundException(ErrorCode.MEMO_NOT_FOUND));
+
+        MemoResponseData memoResponseData = MemoResponseData.builder().
+                memo(memo)
+                .build();
+
+        if (!(userId.equals(memo.getUser().getId()))) {
+            throw new UserNotFoundException(ErrorCode.MEMO_NOT_FOUND);
+        }
         return memoResponseData;
     }
 
+
     //메모 아이디로메모 삭제
-    public void deleteMemoByMemoId(String userId, int memoId) {
-        memoRepository.deleteMemoByMemoId(userId, memoId);
+    public void deleteMemoByMemoId(UUID userId, UUID memoId) {
+        Memo memo = memoRepository.findById(userId).orElseThrow(() -> new MemoNotFoundException(ErrorCode.MEMO_NOT_FOUND));
+
+        if (!(userId.equals(memo.getUser().getId()))) {
+            throw new UserNotFoundException(ErrorCode.MEMO_NOT_FOUND);
+        }
+        memoRepository.delete(memo);
     }
 
     //메모아이디로 메모 업데이트
-    public void updateMemoByMemoId(String userId, int memoId, MemoUpdateDto memoUpdateDto) {
+    public void updateMemoByMemoId(UUID userId, UUID memoId, MemoUpdateDto memoUpdateDto) {
+
+        Memo memo = memoRepository.findById(memoId).orElseThrow(() -> new MemoNotFoundException(ErrorCode.MEMO_NOT_FOUND));
 
         Memo newMemo = Memo.builder()
-                .userId(userId)
-                .memoId(memoId)
                 .content(memoUpdateDto.getContent())
+                .title(memo.getTitle())
                 .build();
-
-        memoRepository.updateMemoByMemoId(newMemo);
+        memo = newMemo;
     }
 }

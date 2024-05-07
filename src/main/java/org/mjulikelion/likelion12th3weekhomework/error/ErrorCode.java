@@ -13,6 +13,8 @@ public enum ErrorCode {
     TITLE_NOT_FOUND("4043", "메모 제목을 찾을 수 없습니다"),//
     CANT_ACCESS("4044", "접근이 불가합니다"),
     USER_DUPLICATION("4045", "이미 존재하는 유저입니다"),
+    Password_NOT_EQUAL("4046", "이메일과 패스워드가 일치하지 않습니다"),
+    ORGANIZATION_NOT_FOUND("4047", "해당 organization이 존재하지 않습니다"),
 
     NOT_NULL("9001", "필수값이 누락되었습니다."),
     NOT_BLANK("9002", "필수값이 빈 값이거나 공백으로 되어있습니다."),
