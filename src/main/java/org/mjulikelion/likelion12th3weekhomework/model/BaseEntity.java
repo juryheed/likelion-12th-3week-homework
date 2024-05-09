@@ -1,4 +1,4 @@
-package org.mjulikelion.likelion12th3weekhomework.Entity;
+package org.mjulikelion.likelion12th3weekhomework.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;

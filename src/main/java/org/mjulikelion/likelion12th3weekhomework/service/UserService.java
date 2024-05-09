@@ -1,9 +1,9 @@
 package org.mjulikelion.likelion12th3weekhomework.service;
 
 import lombok.AllArgsConstructor;
-import org.mjulikelion.likelion12th3weekhomework.dto.UserCreateDto;
-import org.mjulikelion.likelion12th3weekhomework.dto.UserDeleteDto;
-import org.mjulikelion.likelion12th3weekhomework.dto.UserUpdateDto;
+import org.mjulikelion.likelion12th3weekhomework.dto.request.user.LoginDto;
+import org.mjulikelion.likelion12th3weekhomework.dto.request.user.UserCreateDto;
+import org.mjulikelion.likelion12th3weekhomework.dto.request.user.UserUpdateDto;
 import org.mjulikelion.likelion12th3weekhomework.error.ErrorCode;
 import org.mjulikelion.likelion12th3weekhomework.error.exception.MemoNotFoundException;
 import org.mjulikelion.likelion12th3weekhomework.error.exception.UserNotFoundException;
@@ -27,30 +27,27 @@ public class UserService {
         userRepository.save(newUser);
     }
 
-    public void userUpdate(UUID userId, UserUpdateDto userUpdateDto) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new MemoNotFoundException(ErrorCode.MEMO_NOT_FOUND));
+    public void userUpdate(UUID id, UserUpdateDto userUpdateDto) {
+        User user = userRepository.findById(id).orElseThrow(() -> new MemoNotFoundException(ErrorCode.MEMO_NOT_FOUND));
 
         User newUser = User.builder()
-                .userName(user.getUserName())
+                .userName(userUpdateDto.getUserName())
                 .email(user.getEmail())
                 .passWord(user.getPassWord())
                 .build();
-        user = newUser;
+        userRepository.save(newUser);
     }
 
-    public void userDelete(UUID userId, UserDeleteDto userDeleteDto) {
-        User user = userRepository.findById(userDeleteDto.getUserId()).orElseThrow(() -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND));
+    public void userDelete(UUID userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND));
 
-        if (!(userId.equals(user.getId()))) {
-            throw new UserNotFoundException(ErrorCode.USER_NOT_FOUND);
-        }
         userRepository.delete(user);
     }
 
-    public void login(UUID userId, String email, String password) {
+    public void login(UUID userId, LoginDto loginDto) {
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND));
 
-        if (!((email.equals(user.getEmail())) & (password.equals(user.getPassWord())))) {
+        if (!((loginDto.getEmail().equals(user.getEmail())) & (loginDto.getPassWord().equals(user.getPassWord())))) {
             throw new UserNotFoundException(ErrorCode.USER_NOT_FOUND);
         }
     }

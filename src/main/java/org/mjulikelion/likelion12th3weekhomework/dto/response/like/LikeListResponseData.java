@@ -1,4 +1,4 @@
-package org.mjulikelion.likelion12th3weekhomework.dto.response;
+package org.mjulikelion.likelion12th3weekhomework.dto.response.like;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

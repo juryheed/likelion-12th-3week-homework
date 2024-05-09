@@ -1,10 +1,11 @@
 package org.mjulikelion.likelion12th3weekhomework.controller;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.mjulikelion.likelion12th3weekhomework.dto.ResponseDto;
-import org.mjulikelion.likelion12th3weekhomework.dto.UserCreateDto;
-import org.mjulikelion.likelion12th3weekhomework.dto.UserDeleteDto;
-import org.mjulikelion.likelion12th3weekhomework.dto.UserUpdateDto;
+import org.mjulikelion.likelion12th3weekhomework.dto.request.user.LoginDto;
+import org.mjulikelion.likelion12th3weekhomework.dto.request.user.UserCreateDto;
+import org.mjulikelion.likelion12th3weekhomework.dto.request.user.UserUpdateDto;
+import org.mjulikelion.likelion12th3weekhomework.dto.response.ResponseDto;
 import org.mjulikelion.likelion12th3weekhomework.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,13 +15,13 @@ import java.util.UUID;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("users")
+@RequestMapping("/users")
 public class UserController {
     private final UserService userService;
 
     //유저 추가
     @PostMapping
-    public ResponseEntity<ResponseDto<Void>> addUser(@RequestBody UserCreateDto userCreateDto) {
+    public ResponseEntity<ResponseDto<Void>> addUser(@RequestBody @Valid UserCreateDto userCreateDto) {
         userService.userAdd(userCreateDto);
 
         return new ResponseEntity<>(ResponseDto.res(
@@ -30,8 +31,8 @@ public class UserController {
     }
 
     //유저 정보 수정
-    @PatchMapping("/{id}")
-    public ResponseEntity<ResponseDto<Void>> userUpdate(@PathVariable UUID userId, @RequestBody UserUpdateDto userUpdateDto) {
+    @PatchMapping
+    public ResponseEntity<ResponseDto<Void>> userUpdate(@RequestHeader("userId") UUID userId, @RequestBody @Valid UserUpdateDto userUpdateDto) {
         userService.userUpdate(userId, userUpdateDto);
 
         return new ResponseEntity<>(ResponseDto.res(
@@ -41,9 +42,9 @@ public class UserController {
     }
 
     //유저 삭제
-    @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseDto<Void>> userDelete(@RequestHeader UUID userId, @PathVariable UserDeleteDto userDeleteDto) {
-        userService.userDelete(userId, userDeleteDto);
+    @DeleteMapping
+    public ResponseEntity<ResponseDto<Void>> userDelete(@RequestHeader("userId") UUID userId) {
+        userService.userDelete(userId);
 
         return new ResponseEntity<>(ResponseDto.res(
                 HttpStatus.OK,
@@ -53,15 +54,13 @@ public class UserController {
 
 
     //로그인
-    @GetMapping("/login")
-    public ResponseEntity<ResponseDto<Void>> login(@RequestHeader UUID userId, @RequestHeader String email, @RequestHeader String password) {
-        userService.login(userId, email, password);
+    @PostMapping("/login")
+    public ResponseEntity<ResponseDto<Void>> login(@RequestHeader("userId") UUID userId, @RequestBody @Valid LoginDto loginDto) {
+        userService.login(userId, loginDto);
 
         return new ResponseEntity<>(ResponseDto.res(
                 HttpStatus.CREATED,
                 "Susccess"
         ), HttpStatus.CREATED);
     }
-
-
 }

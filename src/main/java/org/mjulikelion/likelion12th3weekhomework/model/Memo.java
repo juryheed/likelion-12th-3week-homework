@@ -2,7 +2,6 @@ package org.mjulikelion.likelion12th3weekhomework.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.mjulikelion.likelion12th3weekhomework.Entity.BaseEntity;
 
 import java.util.List;
 

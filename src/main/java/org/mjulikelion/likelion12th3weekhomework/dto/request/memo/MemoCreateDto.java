@@ -1,10 +1,8 @@
-package org.mjulikelion.likelion12th3weekhomework.dto;
+package org.mjulikelion.likelion12th3weekhomework.dto.request.memo;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@AllArgsConstructor
 @Getter
 public class MemoCreateDto {
 

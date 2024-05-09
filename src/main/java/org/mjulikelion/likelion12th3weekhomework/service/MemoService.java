@@ -1,10 +1,10 @@
 package org.mjulikelion.likelion12th3weekhomework.service;
 
 import lombok.AllArgsConstructor;
-import org.mjulikelion.likelion12th3weekhomework.dto.MemoCreateDto;
-import org.mjulikelion.likelion12th3weekhomework.dto.MemoUpdateDto;
-import org.mjulikelion.likelion12th3weekhomework.dto.response.MemoListResponseData;
-import org.mjulikelion.likelion12th3weekhomework.dto.response.MemoResponseData;
+import org.mjulikelion.likelion12th3weekhomework.dto.request.memo.MemoCreateDto;
+import org.mjulikelion.likelion12th3weekhomework.dto.request.memo.MemoUpdateDto;
+import org.mjulikelion.likelion12th3weekhomework.dto.response.memo.MemoListResponseData;
+import org.mjulikelion.likelion12th3weekhomework.dto.response.memo.MemoResponseData;
 import org.mjulikelion.likelion12th3weekhomework.error.ErrorCode;
 import org.mjulikelion.likelion12th3weekhomework.error.exception.MemoNotFoundException;
 import org.mjulikelion.likelion12th3weekhomework.error.exception.UserNotFoundException;
@@ -26,10 +26,11 @@ public class MemoService {
 
     //메모 추가
     public void addMemo(MemoCreateDto memoCreateDto, UUID userId) {
-        UUID memoId = UUID.randomUUID();//랜덤 UUID생성
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND));
         Memo newMemo = Memo.builder()
                 .content(memoCreateDto.getContent())
                 .title(memoCreateDto.getTitle())
+                .user(user)
                 .build();
 
         memoRepository.save(newMemo);
@@ -40,8 +41,8 @@ public class MemoService {
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND));
         List<Memo> memoList = memoRepository.findAllByUser(user);
 
-        MemoListResponseData memoListResponseData = MemoListResponseData.builder().
-                memoList(memoList)
+        MemoListResponseData memoListResponseData = MemoListResponseData.builder()
+                .memoList(memoList)
                 .build();
 
         return memoListResponseData;
@@ -49,10 +50,11 @@ public class MemoService {
 
     //메모 아이디로 메모 조회
     public MemoResponseData getMemoByMemoId(UUID userId, UUID memoId) {
-        Memo memo = memoRepository.findById(userId).orElseThrow(() -> new MemoNotFoundException(ErrorCode.MEMO_NOT_FOUND));
+        Memo memo = memoRepository.findById(memoId).orElseThrow(() -> new MemoNotFoundException(ErrorCode.MEMO_NOT_FOUND));
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND));
 
-        MemoResponseData memoResponseData = MemoResponseData.builder().
-                memo(memo)
+        MemoResponseData memoResponseData = MemoResponseData.builder()
+                .memo(memo)
                 .build();
 
         if (!(userId.equals(memo.getUser().getId()))) {
@@ -64,7 +66,7 @@ public class MemoService {
 
     //메모 아이디로메모 삭제
     public void deleteMemoByMemoId(UUID userId, UUID memoId) {
-        Memo memo = memoRepository.findById(userId).orElseThrow(() -> new MemoNotFoundException(ErrorCode.MEMO_NOT_FOUND));
+        Memo memo = memoRepository.findById(memoId).orElseThrow(() -> new MemoNotFoundException(ErrorCode.MEMO_NOT_FOUND));
 
         if (!(userId.equals(memo.getUser().getId()))) {
             throw new UserNotFoundException(ErrorCode.MEMO_NOT_FOUND);
@@ -76,11 +78,14 @@ public class MemoService {
     public void updateMemoByMemoId(UUID userId, UUID memoId, MemoUpdateDto memoUpdateDto) {
 
         Memo memo = memoRepository.findById(memoId).orElseThrow(() -> new MemoNotFoundException(ErrorCode.MEMO_NOT_FOUND));
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND));
 
         Memo newMemo = Memo.builder()
                 .content(memoUpdateDto.getContent())
                 .title(memo.getTitle())
+                .user(user)
                 .build();
-        memo = newMemo;
+
+        memoRepository.save(newMemo);
     }
 }

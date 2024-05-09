@@ -1,7 +1,8 @@
 package org.mjulikelion.likelion12th3weekhomework.service;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.mjulikelion.likelion12th3weekhomework.dto.JoinDto;
+import org.mjulikelion.likelion12th3weekhomework.dto.request.organizaion.OrganizationCreateDto;
 import org.mjulikelion.likelion12th3weekhomework.error.ErrorCode;
 import org.mjulikelion.likelion12th3weekhomework.error.exception.OrganizationNotFoundException;
 import org.mjulikelion.likelion12th3weekhomework.error.exception.UserNotFoundException;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.LinkedList;
 import java.util.UUID;
 
+@Transactional
 @Service
 @AllArgsConstructor
 public class OrganizationService {
@@ -25,13 +27,13 @@ public class OrganizationService {
     //Organization에는 Id와 userId,name이 존재한다
 
     //조직 생성,
-    public void make(UUID userId, JoinDto joinDto) {
+    public void make(UUID userId, OrganizationCreateDto organizationCreateDto) {
         //Organization newOrganization = new Organization();
         //newOrganization.setName(joinDto.getName());
 
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND));
         Organization newOrganization = Organization.builder()
-                .name(joinDto.getName())
+                .name(organizationCreateDto.getName())
                 .userOrganization(new LinkedList<>())
                 .build();
 
@@ -46,7 +48,7 @@ public class OrganizationService {
     }
 
     //조직 가입
-    public void join(UUID userId, UUID organizationId) {
+    public void join(UUID organizationId, UUID userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND));
         Organization organization = organizationRepository.findById(organizationId).orElseThrow(() -> new OrganizationNotFoundException(ErrorCode.USER_NOT_FOUND));
         UserOrganization newUserOrganization = UserOrganization.builder()
@@ -66,6 +68,7 @@ public class OrganizationService {
 
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND));
         Organization organization = organizationRepository.findById(id).orElseThrow(() -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND));
+
         userOrganizationRepository.deleteByUserAndOrganization(user, organization);
 
     }

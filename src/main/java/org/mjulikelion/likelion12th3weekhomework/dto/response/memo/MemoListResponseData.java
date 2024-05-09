@@ -1,4 +1,4 @@
-package org.mjulikelion.likelion12th3weekhomework.dto.response;
+package org.mjulikelion.likelion12th3weekhomework.dto.response.memo;
 
 import lombok.Builder;
 import lombok.Getter;

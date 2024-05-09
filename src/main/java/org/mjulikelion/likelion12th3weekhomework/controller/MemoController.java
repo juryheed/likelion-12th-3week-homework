@@ -1,11 +1,12 @@
 package org.mjulikelion.likelion12th3weekhomework.controller;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.mjulikelion.likelion12th3weekhomework.dto.MemoCreateDto;
-import org.mjulikelion.likelion12th3weekhomework.dto.MemoUpdateDto;
-import org.mjulikelion.likelion12th3weekhomework.dto.ResponseDto;
-import org.mjulikelion.likelion12th3weekhomework.dto.response.MemoListResponseData;
-import org.mjulikelion.likelion12th3weekhomework.dto.response.MemoResponseData;
+import org.mjulikelion.likelion12th3weekhomework.dto.request.memo.MemoCreateDto;
+import org.mjulikelion.likelion12th3weekhomework.dto.request.memo.MemoUpdateDto;
+import org.mjulikelion.likelion12th3weekhomework.dto.response.ResponseDto;
+import org.mjulikelion.likelion12th3weekhomework.dto.response.memo.MemoListResponseData;
+import org.mjulikelion.likelion12th3weekhomework.dto.response.memo.MemoResponseData;
 import org.mjulikelion.likelion12th3weekhomework.service.MemoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class MemoController {
 
     //메모 작성
     @PostMapping
-    public ResponseEntity<ResponseDto<Void>> addMemo(@RequestBody MemoCreateDto memoCreateDto, @RequestHeader("userId") UUID userId) {//HTTP요청의 본분에 있는데이터를 메소드의 파라미터로 메핑
+    public ResponseEntity<ResponseDto<Void>> addMemo(@RequestBody @Valid MemoCreateDto memoCreateDto, @RequestHeader("userId") UUID userId) {//HTTP요청의 본분에 있는데이터를 메소드의 파라미터로 메핑
         memoService.addMemo(memoCreateDto, userId);
 
         return new ResponseEntity<>(ResponseDto.res(
@@ -46,8 +47,8 @@ public class MemoController {
 
     //자신이 작성한 메모를 메모 ID를 통해서 조회
     @GetMapping("/{id}")      //조회니까GET
-    public ResponseEntity<ResponseDto<MemoResponseData>> getMemoByMemoId(@RequestHeader("userId") UUID userId, @PathVariable UUID id) {
-        MemoResponseData memoResponseData = memoService.getMemoByMemoId(userId, id);
+    public ResponseEntity<ResponseDto<MemoResponseData>> getMemoByMemoId(@RequestHeader("userId") UUID userId, @RequestHeader("memoId") UUID memoId) {
+        MemoResponseData memoResponseData = memoService.getMemoByMemoId(userId, memoId);
 
         return new ResponseEntity<>(ResponseDto.res(
                 HttpStatus.OK,  //응답 상태 코드
@@ -57,9 +58,9 @@ public class MemoController {
     }
 
     //자신이 작성한 메모를 메모 ID를 통해서 삭제
-    @DeleteMapping("/{id}")   //삭제니까 DELETE
-    public ResponseEntity<ResponseDto<Void>> deleteMemoByMemoId(@RequestHeader("uerId") UUID userId, @PathVariable UUID id) {
-        memoService.deleteMemoByMemoId(userId, id);
+    @DeleteMapping  //삭제니까 DELETE
+    public ResponseEntity<ResponseDto<Void>> deleteMemoByMemoId(@RequestHeader("uerId") UUID userId, @RequestHeader("memoId") UUID memoId) {
+        memoService.deleteMemoByMemoId(userId, memoId);
 
         return new ResponseEntity<>(ResponseDto.res(
                 HttpStatus.OK,
@@ -69,8 +70,8 @@ public class MemoController {
 
     //자신이 작성한 메모를 메모 ID를 통해 수정
     @PatchMapping("/{id}")  //수정이니까 PATCH
-    public ResponseEntity<ResponseDto<Void>> updateMemoByMemoId(@RequestHeader("userId") UUID userId, @PathVariable UUID id, @RequestBody MemoUpdateDto memoUpdateDto) {
-        memoService.updateMemoByMemoId(userId, id, memoUpdateDto);
+    public ResponseEntity<ResponseDto<Void>> updateMemoByMemoId(@RequestHeader("userId") UUID userId, @RequestHeader("memoId") UUID memoId, @RequestBody @Valid MemoUpdateDto memoUpdateDto) {
+        memoService.updateMemoByMemoId(userId, memoId, memoUpdateDto);
 
         return new ResponseEntity<>(ResponseDto.res(
                 HttpStatus.OK,
