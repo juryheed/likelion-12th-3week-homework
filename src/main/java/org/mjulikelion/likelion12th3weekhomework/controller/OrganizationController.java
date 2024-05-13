@@ -31,8 +31,8 @@ public class OrganizationController {
     }
 
     //조직 가입
-    @PostMapping("/join")
-    public ResponseEntity<ResponseDto<Void>> join(@RequestHeader("organizationId") UUID organizationId, @RequestHeader("userId") UUID userId) {
+    @PostMapping("/{organizationId}/join")
+    public ResponseEntity<ResponseDto<Void>> join(@PathVariable("organizationId") UUID organizationId, @RequestHeader("userId") UUID userId) {
         organizationService.join(organizationId, userId);
 
         return new ResponseEntity<>(ResponseDto.res(
@@ -42,8 +42,8 @@ public class OrganizationController {
     }
 
     //조직 탈퇴
-    @DeleteMapping("/exit")
-    public ResponseEntity<ResponseDto<Void>> exit(@RequestHeader("organizationId") UUID organizationId, @RequestHeader("userId") UUID userId) {
+    @DeleteMapping("/{organizationId}/exit")
+    public ResponseEntity<ResponseDto<Void>> exit(@PathVariable("organizationId") UUID organizationId, @RequestHeader("userId") UUID userId) {
         organizationService.exit(organizationId, userId);
 
         return new ResponseEntity<>(ResponseDto.res(
