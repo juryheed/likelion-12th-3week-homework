@@ -63,7 +63,7 @@ public class MemoController {
 
     //자신이 작성한 메모를 메모 ID를 통해서 삭제
     @DeleteMapping("/{memoId}")  //삭제니까 DELETE
-    public ResponseEntity<ResponseDto<Void>> deleteMemoByMemoId(@AuthenticatedUser User user, @PathVariable("memoid") UUID memoId) {
+    public ResponseEntity<ResponseDto<Void>> deleteMemoByMemoId(@AuthenticatedUser User user, @PathVariable("memoId") UUID memoId) {
         memoService.deleteMemoByMemoId(user.getId(), memoId);
 
         return new ResponseEntity<>(ResponseDto.res(

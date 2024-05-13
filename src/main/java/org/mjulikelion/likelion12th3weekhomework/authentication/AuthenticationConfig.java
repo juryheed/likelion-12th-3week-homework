@@ -18,7 +18,8 @@ public class AuthenticationConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
         registry.addInterceptor(authenticationInterceptor)
-                .addPathPatterns("/memos/test");
+                .addPathPatterns("/memos/**", "/users/**", "/memos", "/users")
+                .excludePathPatterns("/users/login");
     }
 
     @Override
