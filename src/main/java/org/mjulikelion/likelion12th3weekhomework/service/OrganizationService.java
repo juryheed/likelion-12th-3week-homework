@@ -26,13 +26,13 @@ public class OrganizationService {
     private final UserOrganizationRepository userOrganizationRepository;
 
     //조직 생성
-    public void make(UUID userId, OrganizationCreateDto organizationCreateDto) {
+    public void make(User user, OrganizationCreateDto organizationCreateDto) {
 
         if (organizationRepository.findByName(organizationCreateDto.getName())) {
             throw new DuplicationException(ErrorCode.ORGANIZATION_DUPLICATION);
         }
 
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
+        //User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
         Organization newOrganization = Organization.builder()
                 .name(organizationCreateDto.getName())
                 .userOrganization(new LinkedList<>())
@@ -49,12 +49,12 @@ public class OrganizationService {
     }
 
     //조직 가입
-    public void join(UUID organizationId, UUID userId) {
-        if (organizationRepository.existsById(userId)) {
+    public void join(UUID organizationId, User user) {
+        if (organizationRepository.existsById(user.getId())) {
             throw new DuplicationException(ErrorCode.ORGANIZATION_DUPLICATION);
         }
 
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
+        //User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
         Organization organization = organizationRepository.findById(organizationId).orElseThrow(() -> new NotFoundException(ErrorCode.ORGANIZATION_NOT_FOUND));
         UserOrganization newUserOrganization = UserOrganization.builder()
                 .user(user)
@@ -65,11 +65,11 @@ public class OrganizationService {
 
 
     //조직 탈퇴
-    public void exit(UUID id, UUID userId) {
+    public void exit(UUID id, User user) {
         //userid로 user를 추출
         //id로 organization을 찾는다
         //둘이 겹치는 것을 userorganization에서 삭제한다.
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
+        //User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
         Organization organization = organizationRepository.findById(id).orElseThrow(() -> new NotFoundException(ErrorCode.ORGANIZATION_NOT_FOUND));
 
         userOrganizationRepository.deleteByUserAndOrganization(user, organization);

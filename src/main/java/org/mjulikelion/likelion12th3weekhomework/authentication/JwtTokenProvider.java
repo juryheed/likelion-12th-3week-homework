@@ -37,6 +37,8 @@ public class JwtTokenProvider {
                 .setExpiration(expiration)  //만료 시간
                 .signWith(key, SignatureAlgorithm.HS256)    //서명
                 .compact(); //문자열로 반환
+
+
     }
 
     //페이로드 분석

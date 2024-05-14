@@ -39,7 +39,7 @@ public class UserController {
     //유저 정보 수정
     @PatchMapping
     public ResponseEntity<ResponseDto<Void>> userUpdate(@AuthenticatedUser User user, @RequestBody @Valid UserUpdateDto userUpdateDto) {
-        userService.userUpdate(user.getId(), userUpdateDto);
+        userService.userUpdate(user, userUpdateDto);
 
         return new ResponseEntity<>(ResponseDto.res(
                 HttpStatus.OK,
@@ -50,7 +50,7 @@ public class UserController {
     //유저 삭제
     @DeleteMapping
     public ResponseEntity<ResponseDto<Void>> userDelete(@AuthenticatedUser User user) {
-        userService.userDelete(user.getId());
+        userService.userDelete(user);
 
         return new ResponseEntity<>(ResponseDto.res(
                 HttpStatus.OK,
@@ -67,7 +67,7 @@ public class UserController {
         String payload = userId.toString();
         String accessToken = jwtTokenProvider.createToken(payload);
 
-        ResponseCookie cookie = ResponseCookie.from("AccessToken", /*JwtEncoder.encodeJwtBearerToken(*/accessToken/*)*/)
+        ResponseCookie cookie = ResponseCookie.from("AccessToken", accessToken)
                 .maxAge(Duration.ofMillis(1800000))
                 .path("/")
                 .build();
@@ -76,7 +76,10 @@ public class UserController {
 
         return new ResponseEntity<>(ResponseDto.res(
                 HttpStatus.OK,
-                "OK"
+                "OK:" + accessToken //Access토큰 출력
         ), HttpStatus.OK);
+
+
     }
+
 }
