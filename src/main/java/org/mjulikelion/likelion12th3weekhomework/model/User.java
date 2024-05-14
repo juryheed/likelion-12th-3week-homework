@@ -15,12 +15,12 @@ import java.util.List;
 public class User extends BaseEntity {
     //유저는 ID와 name,email,password가  존재한다.
 
-    @Setter
+
     @Column(unique = true, nullable = false)
     @Size(min = 5, max = 100)
     private final String email; //유저 이메일
 
-    @Setter
+
     @Column(nullable = false)
     @Size(min = 8, max = 30)
     private final String passWord;  //비밀번호

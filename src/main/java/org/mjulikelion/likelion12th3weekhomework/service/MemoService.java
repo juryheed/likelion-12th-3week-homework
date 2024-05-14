@@ -34,7 +34,6 @@ public class MemoService {
 
     //메모 추가
     public void addMemo(MemoCreateDto memoCreateDto, User user) {
-        //User user = findExistUser(user.getId());
 
         Memo newMemo = Memo.builder()
                 .content(memoCreateDto.getContent())
@@ -47,8 +46,6 @@ public class MemoService {
 
     //유저아이디로 메모 조회
     public MemoListResponseData getMemoAllByUserId(User user) {
-        //User user = findExistUser(userId);
-
         List<Memo> memoList = memoRepository.findAllByUser(user);
 
         MemoListResponseData memoListResponseData = MemoListResponseData.builder()
@@ -60,7 +57,6 @@ public class MemoService {
 
     //메모 아이디로 메모 조회
     public MemoResponseData getMemoByMemoId(User user, UUID memoId) {
-        //User user = findExistUser(userId);
         Memo memo = findExistMemo(memoId);
         findAccess(user.getId(), memo);
 
@@ -75,31 +71,21 @@ public class MemoService {
     //메모 아이디로 메모 삭제
     public void deleteMemoByMemoId(User user, UUID memoId) {
         Memo memo = findExistMemo(memoId);
-
         findAccess(user.getId(), memo);
-
         memoRepository.delete(memo);
     }
 
     //메모아이디로 메모 업데이트
     public void updateMemoByMemoId(User user, UUID memoId, MemoUpdateDto memoUpdateDto) {
-        //User user = findExistUser(userId);
         Memo memo = findExistMemo(memoId);
-
         findAccess(user.getId(), memo);
 
-        Memo newMemo = Memo.builder()
-                .content(memoUpdateDto.getContent())
-                .title(memo.getTitle())
-                .user(user)
-                .build();
-
-        memoRepository.save(newMemo);
+        memo.setContent(memoUpdateDto.getContent());
+        memoRepository.save(memo);
     }
 
     //좋아요 추가 기능
     public void likeAdd(User user, UUID memoId) {
-        //User user = findExistUser(userId);
         Memo memo = findExistMemo(memoId);
 
         //이미 좋아요를 눌렀는지 검사
@@ -116,7 +102,6 @@ public class MemoService {
 
     //좋아요 정보 확인
     public LikeListResponseData getLikeInfo(User user, UUID memoId) {
-        //User user = findExistUser(user.Id);
         List<MemoLike> memoLike = memolikeRepository.findAllByUser(user);
 
         LikeListResponseData likeListResponseData = LikeListResponseData.builder()

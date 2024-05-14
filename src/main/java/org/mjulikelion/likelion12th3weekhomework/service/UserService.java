@@ -22,19 +22,11 @@ public class UserService {
     }
 
     public void userUpdate(User user, UserUpdateDto userUpdateDto) {
-        //User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
-
-        User newUser = User.builder()
-                .userName(userUpdateDto.getUserName())
-                .email(user.getEmail())
-                .passWord(user.getPassWord())
-                .build();
-        userRepository.save(newUser);
+        user.setUserName(userUpdateDto.getUserName());
+        userRepository.save(user);
     }
 
     public void userDelete(User user) {
-        //User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
-
         userRepository.delete(user);
     }
 

@@ -32,7 +32,6 @@ public class OrganizationService {
             throw new DuplicationException(ErrorCode.ORGANIZATION_DUPLICATION);
         }
 
-        //User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
         Organization newOrganization = Organization.builder()
                 .name(organizationCreateDto.getName())
                 .userOrganization(new LinkedList<>())
@@ -54,7 +53,6 @@ public class OrganizationService {
             throw new DuplicationException(ErrorCode.ORGANIZATION_DUPLICATION);
         }
 
-        //User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
         Organization organization = organizationRepository.findById(organizationId).orElseThrow(() -> new NotFoundException(ErrorCode.ORGANIZATION_NOT_FOUND));
         UserOrganization newUserOrganization = UserOrganization.builder()
                 .user(user)
@@ -73,8 +71,5 @@ public class OrganizationService {
         Organization organization = organizationRepository.findById(id).orElseThrow(() -> new NotFoundException(ErrorCode.ORGANIZATION_NOT_FOUND));
 
         userOrganizationRepository.deleteByUserAndOrganization(user, organization);
-
     }
-
-
 }

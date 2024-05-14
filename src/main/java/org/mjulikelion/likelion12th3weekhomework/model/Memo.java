@@ -23,7 +23,7 @@ public class Memo extends BaseEntity {
     @Setter
     @Column(nullable = false)
     @Size(max = 2000)
-    private final String content; //메모내용
+    private String content; //메모내용
 
     @JsonIgnore
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
