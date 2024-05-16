@@ -8,7 +8,7 @@ import lombok.Getter;
 public enum ErrorCode {
 
     //인증
-    Password_NOT_EQUAL("4016", "이메일과 패스워드가 일치하지 않습니다"),
+    PASSWORD_NOT_EQUAL("4016", "이메일과 패스워드가 일치하지 않습니다"),
 
 
     //리소스 찾을 수 없음
@@ -16,7 +16,7 @@ public enum ErrorCode {
     MEMO_NOT_FOUND("4041", "메모를 찾을 수 없습니다."),//
     CONTENT_NOT_FOUND("4042", "메모내용을 찾을 수 없습니다"),//
     TITLE_NOT_FOUND("4043", "메모 제목을 찾을 수 없습니다"),//
-    ORGANIZATION_NOT_FOUND("4044", "해당 organization이 존재하지 않습니다"),
+    ORGANIZATION_NOT_FOUND("4044", "해당 조직이 존재하지 않습니다"),
 
     //인가(접근)
     CANT_ACCESS("4034", "접근이 불가합니다"),
@@ -24,8 +24,10 @@ public enum ErrorCode {
     TOKEN_INVALID("4031", "유효하지 않습니다"),
 
     //리소스 중복
-    USER_DUPLICATION("4090", "이미 존재하는 유저입니다"),
+    USER_DUPLICATION("4090", "이미 가입된 이메일 입니다"),
     ORGANIZATION_DUPLICATION("4091", "이미 존재하는 조직입니다"),
+    ALREADY_ORGANIZATION("4092", "이미 해당 조직에 가입 된 상태입니다"),
+    ALREADY_LIKE("4093", "이미 좋아요를 눌렀습니다"),
 
 
     NOT_NULL("9001", "필수값이 누락되었습니다."),

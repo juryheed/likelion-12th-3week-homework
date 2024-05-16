@@ -4,14 +4,13 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.mjulikelion.likelion12th3weekhomework.dto.request.organizaion.OrganizationCreateDto;
 import org.mjulikelion.likelion12th3weekhomework.error.ErrorCode;
-import org.mjulikelion.likelion12th3weekhomework.error.exception.DuplicationException;
+import org.mjulikelion.likelion12th3weekhomework.error.exception.ConflictException;
 import org.mjulikelion.likelion12th3weekhomework.error.exception.NotFoundException;
 import org.mjulikelion.likelion12th3weekhomework.model.Organization;
 import org.mjulikelion.likelion12th3weekhomework.model.User;
 import org.mjulikelion.likelion12th3weekhomework.model.UserOrganization;
 import org.mjulikelion.likelion12th3weekhomework.repository.OrganizationRepository;
 import org.mjulikelion.likelion12th3weekhomework.repository.UserOrganizationRepository;
-import org.mjulikelion.likelion12th3weekhomework.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
@@ -22,14 +21,14 @@ import java.util.UUID;
 @AllArgsConstructor
 public class OrganizationService {
     private final OrganizationRepository organizationRepository;
-    private final UserRepository userRepository;
     private final UserOrganizationRepository userOrganizationRepository;
 
     //조직 생성
     public void make(User user, OrganizationCreateDto organizationCreateDto) {
+        Organization organization = (organizationRepository.findByName(organizationCreateDto.getName()));
 
-        if (organizationRepository.findByName(organizationCreateDto.getName())) {
-            throw new DuplicationException(ErrorCode.ORGANIZATION_DUPLICATION);
+        if (organization != null) {
+            throw new ConflictException(ErrorCode.ORGANIZATION_DUPLICATION);
         }
 
         Organization newOrganization = Organization.builder()
@@ -49,10 +48,6 @@ public class OrganizationService {
 
     //조직 가입
     public void join(UUID organizationId, User user) {
-        if (organizationRepository.existsById(user.getId())) {
-            throw new DuplicationException(ErrorCode.ORGANIZATION_DUPLICATION);
-        }
-
         Organization organization = organizationRepository.findById(organizationId).orElseThrow(() -> new NotFoundException(ErrorCode.ORGANIZATION_NOT_FOUND));
         UserOrganization newUserOrganization = UserOrganization.builder()
                 .user(user)

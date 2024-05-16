@@ -5,7 +5,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.mjulikelion.likelion12th3weekhomework.error.ErrorCode;
-import org.mjulikelion.likelion12th3weekhomework.error.exception.InvalidTokenException;
+import org.mjulikelion.likelion12th3weekhomework.error.exception.TokenInvalidException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -37,8 +37,6 @@ public class JwtTokenProvider {
                 .setExpiration(expiration)  //만료 시간
                 .signWith(key, SignatureAlgorithm.HS256)    //서명
                 .compact(); //문자열로 반환
-
-
     }
 
     //페이로드 분석
@@ -51,7 +49,7 @@ public class JwtTokenProvider {
                     .getBody()
                     .getSubject();
         } catch (JwtException e) {
-            throw new InvalidTokenException(ErrorCode.TOKEN_INVALID, e.getMessage());
+            throw new TokenInvalidException(ErrorCode.TOKEN_INVALID);
         }
     }
 }
