@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.mjulikelion.likelion12th3weekhomework.authentication.AuthenticatedUser;
 import org.mjulikelion.likelion12th3weekhomework.authentication.JwtTokenProvider;
+import org.mjulikelion.likelion12th3weekhomework.dto.request.user.LoginDto;
 import org.mjulikelion.likelion12th3weekhomework.dto.request.user.UserCreateDto;
 import org.mjulikelion.likelion12th3weekhomework.dto.request.user.UserUpdateDto;
 import org.mjulikelion.likelion12th3weekhomework.dto.response.ResponseDto;
@@ -62,10 +63,10 @@ public class UserController {
     //로그인
     @PostMapping("/login")
     public ResponseEntity<ResponseDto<Void>> login(@RequestHeader("userId") UUID userId
-            , @RequestHeader("email") String email
-            , @RequestHeader("password") String password
+            , @RequestBody @Valid LoginDto loginDto //유저 정보를 Body로 받음
             , HttpServletResponse response) {
-        
+        userService.login(userId, loginDto);
+
         String payload = userId.toString();
         String accessToken = jwtTokenProvider.createToken(payload);
 

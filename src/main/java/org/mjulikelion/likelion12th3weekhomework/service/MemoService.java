@@ -68,10 +68,8 @@ public class MemoService {
     }
 
     //메모 아이디로 메모 조회
-    public MemoResponseData getMemoByMemoId(User user, UUID memoId) {
+    public MemoResponseData getMemoByMemoId(UUID memoId) {
         Memo memo = findExistMemo(memoId);
-        findAccess(user.getId(), memo);
-
         MemoResponseData memoResponseData = MemoResponseData.builder()
                 .title(memo.getTitle())
                 .content(memo.getContent())
@@ -114,7 +112,7 @@ public class MemoService {
     }
 
     //memoId로 좋아요 정보 확인
-    public LikeListResponseData getLikeInfo(User user, UUID memoId) {
+    public LikeListResponseData getLikeInfo(UUID memoId) {
         Memo memo = findExistMemo(memoId);
 
         List<MemoLike> memoList = memolikeRepository.findAllByMemo(memo);

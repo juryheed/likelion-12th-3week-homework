@@ -17,6 +17,7 @@ public enum ErrorCode {
     CONTENT_NOT_FOUND("4042", "메모내용을 찾을 수 없습니다"),//
     TITLE_NOT_FOUND("4043", "메모 제목을 찾을 수 없습니다"),//
     ORGANIZATION_NOT_FOUND("4044", "해당 조직이 존재하지 않습니다"),
+    EMAIL_NOT_FOUND("4045", "이메일을 찾을수 없습니다"),
 
     //인가(접근)
     CANT_ACCESS("4034", "접근이 불가합니다"),

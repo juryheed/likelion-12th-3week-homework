@@ -48,10 +48,10 @@ public class MemoController {
     }
 
 
-    //자신이 작성한 메모를 메모 ID를 통해서 조회
-    @GetMapping("/{memoId}")      //조회니까GET
-    public ResponseEntity<ResponseDto<MemoResponseData>> getMemoByMemoId(@AuthenticatedUser User user, @PathVariable("memoId") UUID memoId) {
-        MemoResponseData memoResponseData = memoService.getMemoByMemoId(user, memoId);
+    //메모를 메모 ID를 통해서 조회(누구나 가능하다)
+    @GetMapping("/{memoId}/look")      //조회니까GET
+    public ResponseEntity<ResponseDto<MemoResponseData>> getMemoByMemoId(@PathVariable("memoId") UUID memoId) {
+        MemoResponseData memoResponseData = memoService.getMemoByMemoId(memoId);
 
         return new ResponseEntity<>(ResponseDto.res(
                 HttpStatus.OK,  //응답 상태 코드
@@ -94,9 +94,9 @@ public class MemoController {
     }
 
     //좋아요 정보 보기
-    @GetMapping("/{memoId}/likes")//좋아요 조회니까 Get
-    public ResponseEntity<ResponseDto<LikeListResponseData>> getLikeListByMemoId(@AuthenticatedUser User user, @PathVariable("memoId") UUID memoId) {
-        LikeListResponseData likeListResponseData = memoService.getLikeInfo(user, memoId);
+    @GetMapping("/{memoId}/likes/look")//좋아요 조회니까 Get
+    public ResponseEntity<ResponseDto<LikeListResponseData>> getLikeListByMemoId(@PathVariable("memoId") UUID memoId) {
+        LikeListResponseData likeListResponseData = memoService.getLikeInfo(memoId);
 
         return new ResponseEntity<>(ResponseDto.res(
                 HttpStatus.OK,
