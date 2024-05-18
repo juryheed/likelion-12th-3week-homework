@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
+import org.hibernate.validator.constraints.Length;
 
 @Getter
 public class UserCreateDto {
@@ -18,6 +19,6 @@ public class UserCreateDto {
     private String email;
 
     @NotBlank(message = "패스워드가 누락되었습니다")
-    @Size(min = 8, max = 30, message = "비밀번호는 최소8글자 최대 30글자 입니다")
+    @Length(min = 8, max = 100, message = "비밀번호는 최소8글자 최대 40글자 입니다")
     private String password;
 }

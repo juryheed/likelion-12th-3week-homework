@@ -13,6 +13,6 @@ public class LoginDto {
     private String email;
 
     @NotBlank(message = "패스워드가 누락되었습니다")
-    @Size(min = 8, max = 30, message = "비밀번호는 최소8글자 최대 30글자 입니다")
-    private String passWord;
+    @Size(min = 8, max = 40, message = "비밀번호는 최소8글자 최대 40글자 입니다")
+    private String password;
 }

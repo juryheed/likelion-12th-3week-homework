@@ -15,7 +15,6 @@ public class AuthenticationExtractor {
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (TOKEN_COOKIE_NAME.equals(cookie.getName())) {
-                    //return Encoder.decodeJwtBearerToken(cookieVlaue);
                     return cookie.getValue().replace("+", " ").substring("Bearer ".length()); //디코딩
                 }
             }

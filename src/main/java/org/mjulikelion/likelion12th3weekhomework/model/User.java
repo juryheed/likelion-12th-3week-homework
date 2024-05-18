@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.hibernate.validator.constraints.Length;
 
 import java.util.List;
 
@@ -15,15 +16,14 @@ import java.util.List;
 public class User extends BaseEntity {
     //유저는 ID와 name,email,password가  존재한다.
 
-
     @Column(unique = true, nullable = false)
     @Size(min = 5, max = 100)
     private final String email; //유저 이메일
 
-
+    @Setter
     @Column(nullable = false)
-    @Size(min = 8, max = 30)
-    private final String passWord;  //비밀번호
+    @Length(min = 8, max = 100)
+    private String password;  //비밀번호
 
     @Setter
     @Column(nullable = false)

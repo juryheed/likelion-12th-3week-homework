@@ -115,12 +115,12 @@ public class MemoService {
     public LikeListResponseData getLikeInfo(UUID memoId) {
         Memo memo = findExistMemo(memoId);
 
-        List<MemoLike> memoList = memolikeRepository.findAllByMemo(memo);
+        List<MemoLike> memoList = memolikeRepository.findAllByMemo(memo);   //메모로 좋아요(user+memo)들을 찾아옴
 
         List<LikeResponseData> likeList = new LinkedList<>();
         for (MemoLike l : memoList) {
             LikeResponseData likeResponseData = LikeResponseData.builder()
-                    .name(l.getMemo().getUser().getUserName())
+                    .name(l.getMemo().getUser().getUserName())//.name(l.getUser().getUserName())
                     .build();
             likeList.add(likeResponseData);
         }
