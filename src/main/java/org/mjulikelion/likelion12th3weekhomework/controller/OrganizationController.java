@@ -28,29 +28,29 @@ public class OrganizationController {
 
         return new ResponseEntity<>(ResponseDto.res(
                 HttpStatus.CREATED,
-                "Susccess"
+                "조직 생성 완료"
         ), HttpStatus.CREATED);
     }
 
     //조직 가입
-    @PostMapping("/{organizationId}/join")
-    public ResponseEntity<ResponseDto<Void>> join(@PathVariable("organizationId") UUID organizationId, @AuthenticatedUser User user) {
-        organizationService.join(organizationId, user);
+    @PostMapping("/{organizationid}")
+    public ResponseEntity<ResponseDto<Void>> join(@AuthenticatedUser User user, @PathVariable("organizationid") UUID organizationId) {
+        organizationService.join(user, organizationId);
 
         return new ResponseEntity<>(ResponseDto.res(
                 HttpStatus.CREATED,
-                "Susccess"
+                "조직 가입에 성공"
         ), HttpStatus.CREATED);
     }
 
     //조직 탈퇴
-    @DeleteMapping("/{organizationId}/exit")
-    public ResponseEntity<ResponseDto<Void>> exit(@PathVariable("organizationId") UUID organizationId, @AuthenticatedUser User user) {
-        organizationService.exit(organizationId, user);
+    @DeleteMapping("/{organizationid}")
+    public ResponseEntity<ResponseDto<Void>> exit(@AuthenticatedUser User user, @PathVariable("organizationid") UUID organizationId) {
+        organizationService.exit(user, organizationId);
 
         return new ResponseEntity<>(ResponseDto.res(
                 HttpStatus.OK,
-                "Susccess"
+                "조직 탈퇴 성공"
         ), HttpStatus.OK);
     }
 }

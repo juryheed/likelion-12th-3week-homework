@@ -19,8 +19,8 @@ public class AuthenticationConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
         registry.addInterceptor(authenticationInterceptor)
-                .addPathPatterns("/memos/**", "/users/**", "/organization/**")
-                .excludePathPatterns("/{memoId}/likes/look", "/users/login", "/users/add", "memos/{memoId}./look");
+                .addPathPatterns("/memos/**", "/users/**", "/organizations/**", "/auth/**")
+                .excludePathPatterns("/auth/add", "/auth/login");
     }
 
     //컨트롤러 메서드 파라미터에 인증된 유저가 들어가도록 함

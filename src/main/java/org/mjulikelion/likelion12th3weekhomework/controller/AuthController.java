@@ -9,7 +9,8 @@ import org.mjulikelion.likelion12th3weekhomework.dto.request.user.LoginDto;
 import org.mjulikelion.likelion12th3weekhomework.dto.request.user.UserCreateDto;
 import org.mjulikelion.likelion12th3weekhomework.dto.response.ResponseDto;
 import org.mjulikelion.likelion12th3weekhomework.model.User;
-import org.mjulikelion.likelion12th3weekhomework.service.UserService;
+import org.mjulikelion.likelion12th3weekhomework.repository.UserRepository;
+import org.mjulikelion.likelion12th3weekhomework.service.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -25,18 +26,27 @@ import java.time.Duration;
 @RequestMapping("/auth")
 public class AuthController {
     private static final String TOKEN_COOKIE_NAME = "AccessToken";
-    private final UserService userService;
+    private final AuthService authService;
     private final JwtTokenProvider jwtTokenProvider;
+    private final UserRepository userRepository;
 
+    //회원 가입
+    @PostMapping("/add")
+    public ResponseEntity<ResponseDto<Void>> addUser(@RequestBody @Valid UserCreateDto userCreateDto) {
+        authService.userAdd(userCreateDto);
+
+        return new ResponseEntity<>(ResponseDto.res(
+                HttpStatus.CREATED,
+                "회원 가입 완료"
+        ), HttpStatus.CREATED);
+    }
 
     //로그인
     @PostMapping("/login")
-    public ResponseEntity<ResponseDto<Void>> login(@RequestBody @Valid LoginDto loginDto //유저 정보를 Body로 받음
-            , HttpServletResponse response) {
+    public ResponseEntity<ResponseDto<Void>> login(@RequestBody @Valid LoginDto loginDto, HttpServletResponse response) {
+        authService.login(loginDto);
 
-        userService.login(loginDto);
-
-        String payload = userService.findUser(loginDto).toString();
+        String payload = String.valueOf(userRepository.findByEmail(loginDto.getEmail()).getId());
         String accessToken = jwtTokenProvider.createToken(payload);
 
         //쿠키 만드는거
@@ -47,11 +57,10 @@ public class AuthController {
         response.addHeader("set-cookie", cookie.toString());//set-cookie로 헤더에 쿠키를 출력함
 
         return new ResponseEntity<>(ResponseDto.res(
-                HttpStatus.OK,
+                HttpStatus.CREATED,
                 "로그인 완료:"
-        ), HttpStatus.OK);
+        ), HttpStatus.CREATED);
     }
-
 
     //로그아웃
     @PostMapping("/logout")
@@ -63,21 +72,8 @@ public class AuthController {
         response.addHeader("set-cookie", cookie.toString());//set-cookie로 헤더에 쿠키를 출력함
 
         return new ResponseEntity<>(ResponseDto.res(
-                HttpStatus.OK,
-                "로그 아웃 완료"
-        ), HttpStatus.OK);
-    }
-
-
-    //회원 가입
-    @PostMapping("/add")
-    public ResponseEntity<ResponseDto<Void>> addUser(@RequestBody @Valid UserCreateDto userCreateDto) {
-        userService.userAdd(userCreateDto);
-
-        return new ResponseEntity<>(ResponseDto.res(
                 HttpStatus.CREATED,
-                "회원 가입 완료"
+                "로그 아웃 완료"
         ), HttpStatus.CREATED);
     }
-
 }

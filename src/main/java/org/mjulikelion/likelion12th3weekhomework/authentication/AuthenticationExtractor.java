@@ -21,6 +21,4 @@ public class AuthenticationExtractor {
         }
         throw new UnauthorizedException(ErrorCode.TOKEN_NOT_FOUND);//없으면 오류 출력
     }
-
-
 }

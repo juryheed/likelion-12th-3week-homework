@@ -35,7 +35,7 @@ public class MemoService {
     private final MemoLikeRepository memoLikeRepository;
 
     //메모 추가
-    public void addMemo(MemoCreateDto memoCreateDto, User user) {
+    public void addMemo(User user, MemoCreateDto memoCreateDto) {
         Memo newMemo = Memo.builder()
                 .content(memoCreateDto.getContent())
                 .title(memoCreateDto.getTitle())
@@ -47,8 +47,6 @@ public class MemoService {
 
     //자신의 메모 전체 조회
     public MemoListResponseData getMemoAllByUserId(User user) {
-        //Memo memo = memoRepository.findById(user.getId()).orElseThrow(() -> new NotFoundException(ErrorCode.MEMO_NOT_FOUND));
-
         List<Memo> memoList = memoRepository.findAllByUser(user);
 
         List<MemoResponseData> memolist = new LinkedList<>();
@@ -68,7 +66,7 @@ public class MemoService {
     }
 
     //메모 아이디로 메모 조회
-    public MemoResponseData getMemoByMemoId(UUID memoId) {
+    public MemoResponseData getMemoByMemoId(User user, UUID memoId) {
         Memo memo = findExistMemo(memoId);
         MemoResponseData memoResponseData = MemoResponseData.builder()
                 .title(memo.getTitle())
@@ -83,6 +81,7 @@ public class MemoService {
     public void deleteMemoByMemoId(User user, UUID memoId) {
         Memo memo = findExistMemo(memoId);
         findAccess(user.getId(), memo);
+
         memoRepository.delete(memo);
     }
 
@@ -112,15 +111,15 @@ public class MemoService {
     }
 
     //memoId로 좋아요 정보 확인
-    public LikeListResponseData getLikeInfo(UUID memoId) {
+    public LikeListResponseData getLikeInfo(User user, UUID memoId) {
         Memo memo = findExistMemo(memoId);
 
-        List<MemoLike> memoList = memolikeRepository.findAllByMemo(memo);   //메모로 좋아요(user+memo)들을 찾아옴
+        List<MemoLike> memoList = memolikeRepository.findAllByMemo(memo);   //이 메모에 대한 모든 좋아요를 불러옴
 
         List<LikeResponseData> likeList = new LinkedList<>();
         for (MemoLike l : memoList) {
             LikeResponseData likeResponseData = LikeResponseData.builder()
-                    .name(l.getMemo().getUser().getUserName())//.name(l.getUser().getUserName())
+                    .name(l.getUser().getUserName())  //userId로 유저를 찾고 그 유조의 이름을 추출
                     .build();
             likeList.add(likeResponseData);
         }

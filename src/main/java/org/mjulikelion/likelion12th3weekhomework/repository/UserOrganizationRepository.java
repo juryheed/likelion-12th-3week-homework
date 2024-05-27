@@ -10,4 +10,6 @@ import java.util.UUID;
 public interface UserOrganizationRepository extends JpaRepository<UserOrganization, UUID> {
     void deleteByUserAndOrganization(User user, Organization organization);
 
+    boolean existsByUserAndOrganization(User user, Organization organization);
+
 }

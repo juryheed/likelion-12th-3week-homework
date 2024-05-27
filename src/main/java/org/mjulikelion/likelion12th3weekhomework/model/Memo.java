@@ -2,7 +2,6 @@ package org.mjulikelion.likelion12th3weekhomework.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.List;
@@ -16,13 +15,11 @@ public class Memo extends BaseEntity {
     //메모는 메모 아이디,메모내용,메모제목 이 존재 한다
 
     @Setter
-    @Column(nullable = false)
-    @Size(min = 1, max = 50)
+    @Column(length = 50, nullable = false)
     private final String title; //메모 제목
 
     @Setter
-    @Column(nullable = false)
-    @Size(max = 2000)
+    @Column(length = 2000, nullable = false)
     private String content; //메모내용
 
     @JsonIgnore
