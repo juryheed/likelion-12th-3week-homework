@@ -5,7 +5,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.mjulikelion.likelion12th3weekhomework.authentication.AuthenticatedUser;
 import org.mjulikelion.likelion12th3weekhomework.authentication.JwtTokenProvider;
-import org.mjulikelion.likelion12th3weekhomework.dto.request.user.UserCreateDto;
+import org.mjulikelion.likelion12th3weekhomework.dto.request.user.PasswordUpdateDto;
 import org.mjulikelion.likelion12th3weekhomework.dto.request.user.UserUpdateDto;
 import org.mjulikelion.likelion12th3weekhomework.dto.response.ResponseDto;
 import org.mjulikelion.likelion12th3weekhomework.model.User;
@@ -15,9 +15,6 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Duration;
-import java.util.UUID;
-
 @RestController
 @AllArgsConstructor
 @RequestMapping("/users")
@@ -25,58 +22,43 @@ public class UserController {
     private final UserService userService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    //유저 추가
-    @PostMapping
-    public ResponseEntity<ResponseDto<Void>> addUser(@RequestBody @Valid UserCreateDto userCreateDto) {
-        userService.userAdd(userCreateDto);
-
-        return new ResponseEntity<>(ResponseDto.res(
-                HttpStatus.CREATED,
-                "Success"
-        ), HttpStatus.CREATED);
-    }
-
-    //유저 정보 수정
-    @PatchMapping
+    //유저 이름 수정
+    @PatchMapping("/rename")
     public ResponseEntity<ResponseDto<Void>> userUpdate(@AuthenticatedUser User user, @RequestBody @Valid UserUpdateDto userUpdateDto) {
-        userService.userUpdate(user.getId(), userUpdateDto);
+        userService.userUpdate(user, userUpdateDto);
 
         return new ResponseEntity<>(ResponseDto.res(
                 HttpStatus.OK,
-                "Susccess"
+                "이름 수정 완료"
         ), HttpStatus.OK);
     }
 
-    //유저 삭제
+    //비밀번호 변경
+    @PatchMapping("/repassword")
+    public ResponseEntity<ResponseDto<Void>> passwordUpdate(@AuthenticatedUser User user, @RequestBody @Valid PasswordUpdateDto passwordUpdateDto) {
+        userService.passwordUpdate(user, passwordUpdateDto);
+
+        return new ResponseEntity<>(ResponseDto.res(
+                HttpStatus.OK,
+                "비밀번호 수정 완료"
+        ), HttpStatus.OK);
+    }
+
+    //회원 탈퇴
     @DeleteMapping
-    public ResponseEntity<ResponseDto<Void>> userDelete(@AuthenticatedUser User user) {
-        userService.userDelete(user.getId());
+    public ResponseEntity<ResponseDto<Void>> userDelete(@AuthenticatedUser User user, HttpServletResponse response) {
+        userService.userDelete(user);
 
-        return new ResponseEntity<>(ResponseDto.res(
-                HttpStatus.OK,
-                "Susccess"
-        ), HttpStatus.OK);
-    }
-
-
-    //로그인
-    @PostMapping("/login")
-    public ResponseEntity<ResponseDto<Void>> login(@RequestHeader("userId") UUID userId
-            , HttpServletResponse response) {
-
-        String payload = userId.toString();
-        String accessToken = jwtTokenProvider.createToken(payload);
-
-        ResponseCookie cookie = ResponseCookie.from("AccessToken", /*JwtEncoder.encodeJwtBearerToken(*/accessToken/*)*/)
-                .maxAge(Duration.ofMillis(1800000))
+        ResponseCookie cookie = ResponseCookie.from("AccessToken", null) //인코딩, 쿠키이름과 쿠키값을 지정한다
+                .maxAge(0)
                 .path("/")
                 .build();
-        response.addHeader("set-cookie", cookie.toString());
+        response.addHeader("set-cookie", cookie.toString());//set-cookie로 헤더에 쿠키를 출력함
 
 
         return new ResponseEntity<>(ResponseDto.res(
                 HttpStatus.OK,
-                "OK"
+                "회원 탈퇴 완료"
         ), HttpStatus.OK);
     }
 }

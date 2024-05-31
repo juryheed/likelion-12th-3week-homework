@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface MemoLikeRepository extends JpaRepository<MemoLike, UUID> {
-    List<MemoLike> findAllByUser(User user);
+    MemoLike findByUserAndMemo(User user, Memo memo);
 
-    boolean findByUserAndMemo(User user, Memo memo);
+    List<MemoLike> findAllByMemo(Memo memo);
 }

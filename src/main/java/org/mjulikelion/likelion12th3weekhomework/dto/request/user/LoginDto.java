@@ -3,11 +3,9 @@ package org.mjulikelion.likelion12th3weekhomework.dto.request.user;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@Builder
 public class LoginDto {
     @NotBlank(message = "이메일이 누락되었습니다.")
     @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$", message = "이메일이 형식에 맞지 않습니다.")
@@ -15,6 +13,6 @@ public class LoginDto {
     private String email;
 
     @NotBlank(message = "패스워드가 누락되었습니다")
-    @Size(min = 8, max = 30, message = "비밀번호는 최소8글자 최대 30글자 입니다")
-    private String passWord;
+    @Size(min = 8, max = 40, message = "비밀번호는 최소8글자 최대 40글자 입니다")
+    private String password;
 }

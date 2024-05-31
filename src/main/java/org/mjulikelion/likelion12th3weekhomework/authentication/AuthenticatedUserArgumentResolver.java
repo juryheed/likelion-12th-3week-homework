@@ -20,11 +20,12 @@ public class AuthenticatedUserArgumentResolver implements HandlerMethodArgumentR
         return parameter.hasParameterAnnotation(AuthenticatedUser.class);
     }
 
+    //supportsParameter가 true를 반환할 때 호출
     @Override
-    public User resolveArgument(final MethodParameter parameter,
-                                final ModelAndViewContainer mavContainer,
-                                final NativeWebRequest webRequest,
-                                final WebDataBinderFactory binderFactory) {
-        return authenticationContext.getPrincipal();
+    public User resolveArgument(final MethodParameter parameter,    //메서드의 파라미터를 나타내는 객체
+                                final ModelAndViewContainer mavContainer,   //현재 요청 모델의 뷰 정보를 담고 있음
+                                final NativeWebRequest webRequest,  //HTTP요청을 추상화한 객체
+                                final WebDataBinderFactory binderFactory) { //데이터바인더를 반환하는 팩토리
+        return authenticationContext.getPrincipal();    //이제 인증된 User를 반환
     }
 }

@@ -2,8 +2,10 @@ package org.mjulikelion.likelion12th3weekhomework.controller;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.mjulikelion.likelion12th3weekhomework.authentication.AuthenticatedUser;
 import org.mjulikelion.likelion12th3weekhomework.dto.request.organizaion.OrganizationCreateDto;
 import org.mjulikelion.likelion12th3weekhomework.dto.response.ResponseDto;
+import org.mjulikelion.likelion12th3weekhomework.model.User;
 import org.mjulikelion.likelion12th3weekhomework.service.OrganizationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,34 +23,34 @@ public class OrganizationController {
 
     //조직 생성
     @PostMapping
-    public ResponseEntity<ResponseDto<Void>> make(@RequestHeader("userId") UUID userId, @RequestBody @Valid OrganizationCreateDto organizationCreateDto) {
-        organizationService.make(userId, organizationCreateDto);
+    public ResponseEntity<ResponseDto<Void>> make(@AuthenticatedUser User user, @RequestBody @Valid OrganizationCreateDto organizationCreateDto) {
+        organizationService.make(user, organizationCreateDto);
 
         return new ResponseEntity<>(ResponseDto.res(
                 HttpStatus.CREATED,
-                "Susccess"
+                "조직 생성 완료"
         ), HttpStatus.CREATED);
     }
 
     //조직 가입
-    @PostMapping("/{organizationId}/join")
-    public ResponseEntity<ResponseDto<Void>> join(@PathVariable("organizationId") UUID organizationId, @RequestHeader("userId") UUID userId) {
-        organizationService.join(organizationId, userId);
+    @PostMapping("/{organizationid}")
+    public ResponseEntity<ResponseDto<Void>> join(@AuthenticatedUser User user, @PathVariable("organizationid") UUID organizationId) {
+        organizationService.join(user, organizationId);
 
         return new ResponseEntity<>(ResponseDto.res(
                 HttpStatus.CREATED,
-                "Susccess"
+                "조직 가입에 성공"
         ), HttpStatus.CREATED);
     }
 
     //조직 탈퇴
-    @DeleteMapping("/{organizationId}/exit")
-    public ResponseEntity<ResponseDto<Void>> exit(@PathVariable("organizationId") UUID organizationId, @RequestHeader("userId") UUID userId) {
-        organizationService.exit(organizationId, userId);
+    @DeleteMapping("/{organizationid}")
+    public ResponseEntity<ResponseDto<Void>> exit(@AuthenticatedUser User user, @PathVariable("organizationid") UUID organizationId) {
+        organizationService.exit(user, organizationId);
 
         return new ResponseEntity<>(ResponseDto.res(
                 HttpStatus.OK,
-                "Susccess"
+                "조직 탈퇴 성공"
         ), HttpStatus.OK);
     }
 }

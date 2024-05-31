@@ -5,7 +5,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.mjulikelion.likelion12th3weekhomework.error.ErrorCode;
-import org.mjulikelion.likelion12th3weekhomework.error.exception.InvalidTokenException;
+import org.mjulikelion.likelion12th3weekhomework.error.exception.TokenInvalidException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -39,17 +39,17 @@ public class JwtTokenProvider {
                 .compact(); //문자열로 반환
     }
 
-    //페이로드 분석
+    //페이로드 분석,userId 반환
     public String getPayload(final String token) {
         try {
             return Jwts.parserBuilder()
                     .setSigningKey(key) //키 설정
                     .build()
-                    .parseClaimsJws(token)
+                    .parseClaimsJws(token)//parse:분석하다, 여기서 토큰이 유효하지 않으면 JwtException이 발생
                     .getBody()
                     .getSubject();
         } catch (JwtException e) {
-            throw new InvalidTokenException(ErrorCode.TOKEN_INVALID, e.getMessage());
+            throw new TokenInvalidException(ErrorCode.TOKEN_INVALID);
         }
     }
 }

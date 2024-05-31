@@ -26,8 +26,11 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     public boolean preHandle(final HttpServletRequest request,
                              final HttpServletResponse response,
                              final Object handler) {
-        String accessToken = AuthenticationExtractor.extract(request);
+        //토큰 가져오기
+        String accessToken = AuthenticationExtractor.extract(request);  //쿠키에서 쿠키값을 가져옴
+        //토큰으로 userId찾기
         UUID userId = UUID.fromString(jwtTokenProvider.getPayload(accessToken));
+        //userId로 유저 찾기
         User user = findExistingUser(userId);
         authenticationContext.setPrincipal(user);
         return true;
