@@ -80,7 +80,7 @@ public class MemoService {
     //메모 아이디로 메모 삭제
     public void deleteMemoByMemoId(User user, UUID memoId) {
         Memo memo = findExistMemo(memoId);
-        findAccess(user.getId(), memo);
+        findAccess(user, memo);
 
         memoRepository.delete(memo);
     }
@@ -88,7 +88,7 @@ public class MemoService {
     //메모아이디로 메모 업데이트
     public void updateMemoByMemoId(User user, UUID memoId, MemoUpdateDto memoUpdateDto) {
         Memo memo = findExistMemo(memoId);
-        findAccess(user.getId(), memo);
+        findAccess(user, memo);
 
         memo.setContent(memoUpdateDto.getContent());
         memoRepository.save(memo);
@@ -138,9 +138,9 @@ public class MemoService {
     }
 
     //헤더로 받은 유저아이디와 접근할 메모의 작성자 아이디가 동일한지 검사
-    private void findAccess(UUID userId, Memo memo) {
-        if (!(userId.equals(memo.getId()))) {
-            new ForbiddenException(ErrorCode.CANT_ACCESS);
+    private void findAccess(User user, Memo memo) {
+        if (!(user.getId().equals(memo.getUser().getId()))) {
+            throw new ForbiddenException(ErrorCode.CANT_ACCESS);
         }
     }
 }

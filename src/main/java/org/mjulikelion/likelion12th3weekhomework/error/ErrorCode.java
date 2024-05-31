@@ -18,8 +18,8 @@ public enum ErrorCode {
     //리소스 찾을 수 없음
     USER_NOT_FOUND("4040", "이메일을 다시 입력하세요."),
     MEMO_NOT_FOUND("4041", "메모를 찾을 수 없습니다."),
-    CONTENT_NOT_FOUND("4042", "메모에 입력 된 내용이 없습니다"),
-    TITLE_NOT_FOUND("4043", "메모에 입력 된 제목이 없습니다"),
+    //CONTENT_NOT_FOUND("4042", "메모에 입력 된 내용이 없습니다"),
+    //TITLE_NOT_FOUND("4043", "메모에 입력 된 제목이 없습니다"),
     ORGANIZATION_NOT_FOUND("4044", "그런 아이디를 가진 조직이 존재하지 않습니다"),
 
     //리소스 중복
